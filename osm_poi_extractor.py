@@ -10,24 +10,23 @@ from shapely.geometry import Point
 
 
 def query_address(lat, lng):
+    """
+    Perform reverse geocoding using the POI's latitude and longitude information to obtain address information from
+    HERE Maps.
+    """
     # Pass query into HERE API
     search_radius = '10'
 
-    # geocode_url = 'https://places.cit.api.here.com/places/v1/discover/explore'
     geocode_url = 'https://places.ls.hereapi.com/places/v1/discover/explore'
     geocode_url += '?apiKey=' + here_app_key
     geocode_url += '&mode=retrieveAll'
     geocode_url += '&in=' + str(lat) + ',' + str(lng) + ';r=' + search_radius
     geocode_url += '&pretty'
 
-    # print(geocode_url)
-
     while True:
         try:
             here_query = requests.get(geocode_url).json()
             address = here_query['search']['context']['location']['address']['text'].replace('<br/>', ', ')
-            # print(address)
-            # time.sleep(1)
             return address
 
         except requests.exceptions.ConnectionError:
@@ -41,10 +40,7 @@ def query_address(lat, lng):
 
 def extract_placetype(data):
     """
-    Extracts potential place type information based on several key words: highway,
-    amenity, landuse, shop.
-    :param property_dict: tag information for the POI obtained from OSM
-    :return: list of place type strings
+    Extracts potential place type information based on several key words: highway, amenity, landuse, shop.
     """
     place_types = []
 
@@ -59,25 +55,21 @@ def extract_placetype(data):
 
 def format_data(data):
     """
-    This function takes in the result of the OVERPASS API and formats it
-    into a geojson dictionary which will be returned. The dictionary will also be
-    saved as a local json file.
+    This function takes in the result of the OVERPASS API and formats it into a geojson dictionary which will be
+    returned.
     """
     def swap_coord(coordinates_list):
         return [[lnglat_pair[1], lnglat_pair[0]] for lnglat_pair in coordinates_list]
 
-    # print(data)
     if data.geometry is None or data['name'] is None:
-        # print('Missing geometry or name information')
         return None
-
-    # print(data.geometry.geom_type)
 
     # Extract geometry information
     if data.geometry.geom_type is 'Point':
         lng, lat = data.geometry.x, data.geometry.y
         geometry = {'location': {'type': 'Point',
                                  'coordinates': [lat, lng]}}
+
     elif data.geometry.geom_type is 'Polygon':
         lng, lat = data.geometry.centroid.x, data.geometry.centroid.y
 
@@ -85,6 +77,7 @@ def format_data(data):
                                  'coordinates': [lat, lng]},
                     'bound': {'type': data.geometry.geom_type,
                               'coordinates': swap_coord(list(data.geometry.exterior.coords))}}
+
     elif data.geometry.geom_type is 'MultiPolygon':
         lng, lat = data.geometry.centroid.x, data.geometry.centroid.y
 
@@ -113,13 +106,13 @@ def format_data(data):
         'extraction_date': extract_date()
     }
 
-    # print(poi_dict)
-    # print()
-
     return [poi_dict]
 
 
 def within_boundary(data, shapefile):
+    """
+    Check if the POIs in data fall within the study area's shapefile.
+    """
     if data.geometry.geom_type is 'Point':
         lng, lat = data.geometry.x, data.geometry.y
     elif data.geometry.geom_type is 'Polygon' or data.geometry.geom_type is 'MultiPolygon':
@@ -137,9 +130,9 @@ def within_boundary(data, shapefile):
 
 
 if __name__ == '__main__':
-    here_app_key = 'ChgzzPNIMr-lHVXDqgEFpuV9HbOwLzcB5SCxHpy_l8s'
+    here_app_key = ''
     wait_time = 1
-    output_filename = 'osm_poi_v2.json'
+    output_filename = 'osm_poi.json'
 
     # Import shapefile for Singapore
     singapore_shp = gpd.read_file('master-plan-2014-region-boundary-no-sea-shp/MP14_REGION_NO_SEA_PL.shp')
@@ -147,7 +140,6 @@ if __name__ == '__main__':
 
     # Import shape file for OSM POI data
     filenames = ['gis_osm_buildings_a_free_1.shp', 'gis_osm_pois_a_free_1.shp', 'gis_osm_pois_free_1.shp']
-    # filenames = ['gis_osm_pois_free_1.shp']
 
     for filename in filenames:
         data = gpd.read_file('malaysia-singapore-brunei-latest-free.shp/' + filename)

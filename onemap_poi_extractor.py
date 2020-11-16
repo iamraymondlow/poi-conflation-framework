@@ -7,13 +7,13 @@ import pandas as pd
 from shapely.geometry import Polygon
 
 
-def extract_theme(query_name):
+def extract_theme(theme):
     """
-    This function extracts all locations relevant to the theme.
+    This function extracts all locations related to a particular theme.
     """
     # Pass query into OneMap API
     geocode_url = 'https://developers.onemap.sg/privateapi/themesvc/retrieveTheme'
-    geocode_url += '?queryName=' + query_name
+    geocode_url += '?queryName=' + theme
     geocode_url += '&token=' + token
 
     while True:
@@ -25,6 +25,9 @@ def extract_theme(query_name):
 
 
 def extract_address(query_dict):
+    """
+    Extracts the full address information by concatenating it to form an address string.
+    """
     formatted_address = ''
     address = {}
     if 'ADDRESSBLOCKHOUSENUMBER' in query_dict.keys():
@@ -56,6 +59,9 @@ def extract_address(query_dict):
 
 
 def extract_bounds(bound_str):
+    """
+    Extract the bounds of a POI as well as its centroid coordinates.
+    """
     coordinates = bound_str.split('|')
     bound_coordinates = [(float(latlng.split(',')[1]), float(latlng.split(',')[0])) for latlng in coordinates]
     centroid = Polygon(bound_coordinates).centroid
@@ -63,6 +69,9 @@ def extract_bounds(bound_str):
 
 
 def extract_tags(query_dict):
+    """
+    Extract the POI's description, address type and building name information as tags.
+    """
     temp_dict = {}
     if "DESCRIPTION" in query_dict.keys():
         temp_dict.update({'description': query_dict['DESCRIPTION']})
@@ -77,14 +86,16 @@ def extract_tags(query_dict):
 
 
 def map_theme_placetype(theme):
+    """
+    Perform a mapping of the theme with Google's place type taxonomy.
+    """
     return [theme_mapping[theme_mapping['themes'] == theme]['mapped_placetype'].tolist()[0]]
 
 
 def format_query_result(query_result, theme):
     """
-    This function takes in the result of the OneMap API and formats it
-    into a geojson dictionary which will be returned. The dictionary will also be
-    saved as a local json file.
+    This function takes in the result of the OneMap API and formats it into a geojson dictionary which will be
+    returned.
     """
     poi_data = []
 
@@ -92,9 +103,6 @@ def format_query_result(query_result, theme):
         return poi_data
 
     for i in range(len(query_result)):
-        if i == 0:
-            print(query_result[i])
-
         bound_coordinates = None
         if '|' in query_result[i]['LatLng']:
             bound_coordinates, lat, lng = extract_bounds(query_result[i]['LatLng'])
@@ -122,10 +130,6 @@ def format_query_result(query_result, theme):
         poi_dict['id'] = str(generate_id(poi_dict))
         poi_dict['extraction_date'] = extract_date()
 
-        if i == 0:
-            print(poi_dict)
-            print()
-
         poi_data.append(poi_dict)
 
     return poi_data
@@ -149,13 +153,14 @@ def extract_query_name(themes):
 
 if __name__ == '__main__':
     # Insert your own app id and app code.
-    token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMyMTYsInVzZXJfaWQiOjMyMTYsImVtYWlsIjoiaWFtcmF5bW9uZGxvd0BnbWFpbC5jb20iLCJmb3JldmVyIjpmYWxzZSwiaXNzIjoiaHR0cDpcL1wvb20yLmRmZS5vbmVtYXAuc2dcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE1OTkwMTY4OTEsImV4cCI6MTU5OTQ0ODg5MSwibmJmIjoxNTk5MDE2ODkxLCJqdGkiOiJkYmU5ZDY5MWU5YzIzZTU1NjFkNDU3MWUzNDcyN2FkYyJ9.8860MU5Dqa3P7pcJ8-j3KUfazqasurgUcHSBRZBEl5M'
+    token = ''
     wait_time = 15  # sets the number of minutes to wait between each query when your API limit is reached
-    output_filename = 'onemap_poi_themes.json'
+    output_filename = 'onemap_poi.json'
 
     # Extract query name of selected place types
     theme_mapping = pd.read_csv('onemap_theme_mapping.csv')
     themes, query_names = extract_query_name(theme_mapping['themes'].to_list())
+
     # Extract POI information based on selected place types
     i = 1
     for j in range(len(query_names)):

@@ -210,7 +210,7 @@ def variable_bounding_box(max_lat, min_lat, max_lng, min_lng, querybox_dim, shap
 
 
 if __name__ == '__main__':
-    api_key = 'AIzaSyCPLMPZWIzUMm1DSFl3ydeTuBuh1Qw4hXI'  # Insert your own google api key. Refer to: https://developers.google.com/maps/documentation/geocoding/get-api-key
+    api_key = ''  # Insert your own google api key. Refer to: https://developers.google.com/maps/documentation/geocoding/get-api-key
     wait_time = 15  # sets the number of minutes to wait between each query when your API limit is reached
     output_filename = 'googlemap_poi_tampines_vbb.json'
 

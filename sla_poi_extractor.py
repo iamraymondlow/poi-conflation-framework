@@ -1,13 +1,13 @@
 import json
 import pandas as pd
 import geopandas as gpd
+from helper_functions import remove_duplicate
 from pyproj import Proj
 
 
 def perform_abbreviation_mapping(gpd_file):
     """
-    Maps the terms in the TRADE_CODE, TRADE_TYPE and DATA_TYPE fields into
-    its human readable form.
+    Maps the terms in the TRADE_CODE, TRADE_TYPE and DATA_TYPE fields into its human readable form.
     """
     sla_abbreviation = pd.read_csv('sla_abbreviation.csv')
     abbreviation_list = sla_abbreviation['trade_code'].tolist()
@@ -35,7 +35,7 @@ def perform_abbreviation_mapping(gpd_file):
 
 def capitalise_string(string):
     """
-    Capitalise the first letter of each word in a string.
+    Capitalise the first letter of each word in a string. The original string may contain ().
     """
     capitalised_string = ''
     string_list = string.lower().split(' ')
@@ -87,7 +87,7 @@ def format_address(gpd_row):
 
 def extract_tags(gpd_row):
     """
-    Extract POI tags.
+    Extract the trade brand, trade type and data type information as tag information in the POI.
     """
     tags = {}
 
@@ -105,13 +105,11 @@ def extract_tags(gpd_row):
 
 def format_feature(gpd_file):
     """
-    Formats the POI features into GeoJSON format.
+    Formats the POI features based on the custom schema.
     """
     features = []
     for i in range(len(gpd_file)):
         print('Processing feature {}/{}'.format(i + 1, len(gpd_file)))
-        # print(gpd_file.loc[i, :])
-        # print()
 
         poi_dict = {
             'type': 'Feature',
@@ -129,26 +127,7 @@ def format_feature(gpd_file):
 
         features.append(poi_dict)
 
-        # print(poi_dict)
-        # print()
-
     return features
-
-
-def remove_duplicate(poi_data):
-    dropped_index = []
-    id_list = []
-
-    for i in range(len(poi_data)):
-        if poi_data[i]['id'] in id_list:
-            dropped_index.append(i)
-        else:
-            id_list.append(poi_data[i]['id'])
-
-    for index in sorted(dropped_index, reverse=True):
-        del poi_data[index]
-
-    return poi_data
 
 
 if __name__ == '__main__':

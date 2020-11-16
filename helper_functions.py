@@ -6,9 +6,8 @@ from datetime import datetime
 
 def translate_coordinate(lat, lng, l, h):
     """
-    This function takes in a latitude,longitude pair and translates it to
-    produce a l x h area (m^2) with the original latitude,longitude pair
-    located at the centroid.
+    This function takes in a latitude,longitude pair and translates it to produce a l x h area (m^2) with the
+    original latitude, longitude pair located at the centroid.
     """
     # Define the Earth’s radius, assuming a spherical surface
     earth_radius = 6378137.0
@@ -68,18 +67,16 @@ def calculate_lat_lng_distance(min_coordinate, max_coordinate, is_lat=True, lati
     radius = 6378137.0
 
     if is_lat:
-        distance = (max_coordinate - min_coordinate) * radius / (180.0 / np.pi)
+        return (max_coordinate - min_coordinate) * radius / (180.0 / np.pi)
     else:
-        distance = (max_coordinate - min_coordinate) * (radius * np.cos(np.pi * latitude / 180.0)) / (180.0 / np.pi)
-
-    return distance
+        return (max_coordinate - min_coordinate) * (radius * np.cos(np.pi * latitude / 180.0)) / (180.0 / np.pi)
 
 
 def generate_coordinate_list(min_coordinate, max_coordinate, num_box):
     """
     This function takes in a pair of coordinates (either from the latitude or longitude) and breaks the entire range
-    into multiple intervals, whereby each interval is the size of one side of the query box. The coordinates marking each
-    interval is then stored in a list and returned as an output.
+    into multiple intervals, whereby each interval is the size of one side of the query box. The coordinates marking
+    each interval is then stored in a list and returned as an output.
     """
     query_range = max_coordinate - min_coordinate
     query_interval_length = query_range / num_box
@@ -95,8 +92,8 @@ def generate_coordinate_list(min_coordinate, max_coordinate, num_box):
 
 def generate_bounding_coordinates(lat_list, lng_list):
     """
-    This function takes in two lists containing coordinates in the latitude and longitude
-    direction and generates a list containing coordinates for each bounding box.
+    This function takes in two lists containing coordinates in the latitude and longitude direction and generates a
+    list containing coordinates for each bounding box.
     """
     lat_list = list(reversed(lat_list))
     coordinate_list = []
@@ -109,7 +106,7 @@ def generate_bounding_coordinates(lat_list, lng_list):
 
 def divide_bounding_box(max_lat, min_lat, max_lng, min_lng, querybox_dim):
     """
-    This function divides the bounding box (defined using its coordinates) up into smaller query boxes and
+    This function divides the bounding box (defined using its coordinates) up into smaller sub-bounding boxes and
     returns a list of query box coordinates.
     """
     lat_dist = calculate_lat_lng_distance(min_coordinate=min_lat, max_coordinate=max_lat)
@@ -125,6 +122,9 @@ def divide_bounding_box(max_lat, min_lat, max_lng, min_lng, querybox_dim):
 
 
 def generate_id(poi_dict):
+    """
+    Generates an unique ID based on the encoded string of the POI's name, address and location information.
+    """
     poi_string = poi_dict['properties']['name'] + \
                  poi_dict['properties']['address']['formatted_address'] + \
                  str(poi_dict['geometry']['location']['coordinates'][0]) + \
@@ -135,6 +135,9 @@ def generate_id(poi_dict):
 
 
 def within_boundary_area(lat, lng, min_lat, max_lat, min_lng, max_lng):
+    """
+    Checks if the latitude and longitude pair falls within a region of interest.
+    """
     if lat > max_lat or lat < min_lat:
         return False
     if lng > max_lng or lng < min_lng:
@@ -151,6 +154,9 @@ def extract_date():
 
 
 def segment_address(address):
+    """
+    Parse the address string using the libpostal library and segment it into the various components.
+    """
     address_dict = {}
     address_list = parse_address(address)
     for value, key in address_list:
@@ -168,6 +174,9 @@ def segment_address(address):
 
 
 def remove_duplicate(poi_data):
+    """
+    Remove duplicated POIs in the dataset using the POI's unique ID.
+    """
     dropped_index = []
     id_list = []
 
