@@ -1,2 +1,9 @@
 # poi-conflation-framework
-This repo contains the source code for the manuscript An End-to-End Point of Interest (POI) Conflation Framework.
+This repo contains the source code for the manuscript titled "An End-to-End Point of Interest (POI) Conflation Framework". This manuscipt was submitted on 15th November 2020 to IEEE Transactions on Knowledge and Data Engineering.
+
+## Abstract:
+Point of interest (POI) information refers to the semantic information of places of interest and has many application areas in real estate, transportation, and urban planning. With the availability of POIs from different sources, POI conflation allows one to enrich the data quality and quantity of POIs found within a particular region of interest. This study proposes an end-to-end framework for POI conflation by presenting a data processing pipeline consisting of six steps, starting with data procurement, schema standardisation, taxonomy mapping, POI matching, POI unification, and data verification. The feasibility of the proposed framework is demonstrated by conflating five data sources together, including OpenStreetMap, Google Places, HERE Map, OneMap, and the Singapore Land Authority 2017 dataset, based on a study area within Singapore. A machine learning model was developed to identify POI matches between different data sources using a combination of hybrid sampling techniques, bootstrap aggregation, and ensemble models to address the imbalance between the number of POI matches and non-matches typically found within an area. As a result, our model outperformed all baseline approaches with matching accuracy up to 97.6% and identified 10,290 unique POIs from the study area in under 3 minutes, resulting in a more comprehensive dataset.
+
+
+## Please include the following citation if you are interested in using this codebase:
+Low R, Tekler ZD, Cheah L. An End-to-end Point of Interest (POI) Conflation Framework. IEEE Transactions on Knowledge and Data Engineering
