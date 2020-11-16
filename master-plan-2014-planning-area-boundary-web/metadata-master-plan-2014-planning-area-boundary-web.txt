@@ -1,0 +1,43 @@
+# Metadata for Master Plan 2014 Planning Area Boundary (Web)
+---
+Identifier: '4d9e3b2f-3f4b-488e-bb3a-3638ca656247'
+Name: 'master-plan-2014-planning-area-boundary-web'
+Title: 'Master Plan 2014 Planning Area Boundary (Web)'
+Description:
+  - 'Indicative polygon of planning area boundary. To facilitate urban planning, the
+    Urban Redevelopment Authority (URA) divides Singapore into 55 planning areas.
+    The Master Plan 20014 is a forward looking guiding plan for Singapore''''s development
+    in the medium term over the next 10 to 15 years and the planning boundaries may
+    not coincide with existing developments for some areas.'
+  - 'This is the version as published at URA website and OneMap.'
+Topics:
+  - 'Infrastructure'
+Keywords:
+  - 'MP14'
+  - 'MP2014'
+  - 'Master Plan 2014 Planning Boundary'
+  - 'Planning Area'
+Publisher:
+  Name: 'Urban Redevelopment Authority'
+  Admin 1:
+    Name: 'Pamela Poh'
+    Department: 'Urban Redevelopment Authority'
+    Email: 'pamela_poh@ura.gov.sg'
+Sources:
+  - 'Urban Redevelopment Authority'
+License: 'https://data.gov.sg/open-data-licence'
+Frequency: 'Ad-hoc'
+Last Updated: '2016-11-04T07:59:06.009295'
+Resources:
+  -
+    Identifier: 'f622fcd3-3478-4183-bda8-74779b35fe14'
+    Title: 'Master Plan 2014 Planning Area Boundary (Web) (KML)'
+    Url: 'https://geo.data.gov.sg/mp14-plng-area-web-pl/2014/12/05/kml/mp14-plng-area-web-pl.zip'
+    Format: 'KML'
+    Last Updated: '2014-12-04T16:00:00'
+  -
+    Identifier: '2ab23cb2-b1a4-4b1a-a9e1-b9cad0ac159b'
+    Title: 'Master Plan 2014 Planning Area Boundary (Web) (SHP)'
+    Url: 'https://geo.data.gov.sg/mp14-plng-area-web-pl/2014/12/05/shp/mp14-plng-area-web-pl.zip'
+    Format: 'SHP'
+    Last Updated: '2014-12-04T16:00:00'
