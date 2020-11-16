@@ -1,4 +1,4 @@
-# poi-conflation-framework
+# An End-to-end Point of Interest (POI) Conflation Framework
 This repo contains the source code for the manuscript titled "An End-to-End Point of Interest (POI) Conflation Framework". This manuscipt was submitted on 15th November 2020 to IEEE Transactions on Knowledge and Data Engineering.
 
 ## Abstract:
